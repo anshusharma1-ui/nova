@@ -18,12 +18,14 @@ import heroLarge from './assets/nova-hero-1280.webp'
 import horizonSmall from './assets/nova-horizon-480.webp'
 import horizonLarge from './assets/nova-horizon-960.webp'
 import { deriveIntelligenceViews, intelligenceDemoScenarios, type DerivedView, type IntelligenceViewId } from './intelligenceDemo'
+import CsvAnalyzer from './CsvUploadAnalyzer'
 import './App.css'
 
 const navigation = [
   { label: 'Approach', href: '#approach' },
   { label: 'Platform', href: '#platform' },
   { label: 'Signals', href: '#showcase' },
+  { label: 'Analyze', href: '#csv-analyzer' },
   { label: 'Perspective', href: '#perspective' },
 ]
 
@@ -643,6 +645,7 @@ function App() {
         <Approach />
         <Platform />
         <Showcase />
+        <CsvAnalyzer />
         <Perspective />
         <Contact />
       </main>
