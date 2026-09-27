@@ -1,0 +1,99 @@
+:root {
+  font-family: 'DM Sans', sans-serif;
+  color: #171a15;
+  background: #efeee8;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  --ink: #171a15;
+  --paper: #efeee8;
+  --paper-light: #f7f6f0;
+  --muted: #686a61;
+  --muted-on-dark: #c1c4b8;
+  --panel-muted: #a6a99e;
+  --coral-text: #a94c35;
+  --olive-text: #737b5f;
+  --line: rgba(23, 26, 21, 0.18);
+  --lime: #c9ed55;
+  --coral: #e77c62;
+  --display: 'Space Grotesk', 'DM Sans', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+body,
+button,
+a {
+  font-family: 'DM Sans', sans-serif;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--paper-light);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 2px var(--ink);
+}
+
+::selection {
+  color: var(--ink);
+  background: var(--lime);
+}
+
+#root {
+  width: 100%;
+  overflow: clip;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 20;
+  top: 10px;
+  left: 10px;
+  padding: 10px 14px;
+  color: var(--ink);
+  background: var(--lime);
+  transform: translateY(-160%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
