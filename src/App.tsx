@@ -501,7 +501,9 @@ type ContactErrors = Partial<Record<ContactField, string>>
 function Contact() {
   const [values, setValues] = useState<ContactValues>({ name: '', email: '', message: '' })
   const [errors, setErrors] = useState<ContactErrors>({})
-  const [isLocallyValidated, setIsLocallyValidated] = useState(false)
+  const [submissionStatus, setSubmissionStatus] = useState<'success' | 'error' | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const isSubmittingRef = useRef(false)
   const nameRef = useRef<HTMLInputElement>(null)
   const emailRef = useRef<HTMLInputElement>(null)
   const messageRef = useRef<HTMLTextAreaElement>(null)
@@ -513,11 +515,12 @@ function Contact() {
       delete nextErrors[field]
       return nextErrors
     })
-    setIsLocallyValidated(false)
+    setSubmissionStatus(null)
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (isSubmittingRef.current) return
 
     const nextErrors: ContactErrors = {}
     if (!values.name.trim()) nextErrors.name = 'Enter your name.'
@@ -529,7 +532,7 @@ function Contact() {
     if (!values.message.trim()) nextErrors.message = 'Add a message so we know what is on your mind.'
 
     setErrors(nextErrors)
-    setIsLocallyValidated(false)
+  setSubmissionStatus(null)
 
     const firstInvalidField = (Object.keys(nextErrors) as ContactField[])[0]
     if (firstInvalidField) {
@@ -538,7 +541,34 @@ function Contact() {
       return
     }
 
-    setIsLocallyValidated(true)
+    isSubmittingRef.current = true
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch('https://formspree.io/f/mrpbyvrn', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: values.name.trim(),
+          email: values.email.trim(),
+          message: values.message.trim(),
+        }),
+      })
+
+      if (!response.ok) throw new Error('Contact submission failed')
+
+      setValues({ name: '', email: '', message: '' })
+      setErrors({})
+      setSubmissionStatus('success')
+    } catch {
+      setSubmissionStatus('error')
+    } finally {
+      isSubmittingRef.current = false
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -548,9 +578,9 @@ function Contact() {
         <h2 id="contact-title">What could you see <em>from here?</em></h2>
       </div>
       <p className="contact-note" id="contact-form-note">
-        Share what you are exploring. This preview checks your details locally; it does not send or store messages.
+        Tell us what you are exploring. We’ll get back to you by email.
       </p>
-      <form className="contact-form" onSubmit={handleSubmit} noValidate aria-describedby="contact-form-note">
+      <form className="contact-form" onSubmit={handleSubmit} noValidate aria-describedby="contact-form-note" aria-busy={isSubmitting}>
         {Object.keys(errors).length > 0 && (
           <div className="contact-error-summary" role="alert" aria-live="assertive">
             <h3>There are a few things to check:</h3>
@@ -559,6 +589,12 @@ function Contact() {
                 <li key={field}>{error}</li>
               ))}
             </ul>
+          </div>
+        )}
+        {submissionStatus === 'error' && (
+          <div className="contact-error-summary" role="alert" aria-live="assertive">
+            <h3>Your message couldn’t be sent.</h3>
+            <ul><li>Your details are still here. Please try again.</li></ul>
           </div>
         )}
         <div className="contact-field">
@@ -612,12 +648,12 @@ function Contact() {
           {errors.message && <p className="contact-field-error" id="contact-message-error">{errors.message}</p>}
         </div>
         <div className="contact-form-footer">
-          <button className="contact-submit" type="submit">
-            Check details <ArrowUpRight size={17} aria-hidden="true" />
+          <button className="contact-submit" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Sending…' : 'Send message'} <ArrowUpRight size={17} aria-hidden="true" />
           </button>
-          {isLocallyValidated && (
+          {submissionStatus === 'success' && (
             <p className="contact-success" role="status" aria-live="polite">
-              Looks good. This preview validates locally only; your message was not sent or stored.
+              Your message has been sent. Thank you for reaching out.
             </p>
           )}
         </div>
