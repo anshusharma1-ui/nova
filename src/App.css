@@ -552,6 +552,10 @@
 .command-breadcrumb span { padding-inline: 5px; color: var(--coral); }
 .command-title-row h3 { margin: 0; font-family: var(--display); font-size: 26px; font-weight: 500; }
 .command-title-row h3 > span { color: var(--lime); }
+.scenario-picker { display: grid; gap: 5px; min-width: min(245px, 40%); }
+.scenario-picker label { color: #a6a99e; font-size: 8px; letter-spacing: 0.08em; }
+.scenario-picker select { width: 100%; min-height: 36px; padding: 0 30px 0 10px; color: var(--paper-light); color-scheme: dark; background: #292e26; border: 1px solid rgba(247, 246, 240, 0.24); border-radius: 0; font-size: 11px; }
+.scenario-picker select:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
 
 .showcase-tabs { display: flex; align-items: stretch; gap: 26px; margin-top: 25px; border-bottom: 1px solid rgba(247, 246, 240, 0.16); }
 .showcase-tab { position: relative; min-height: 43px; padding: 0 1px; color: #a6a99e; background: transparent; border: 0; cursor: pointer; font-size: 10px; }
@@ -592,6 +596,9 @@
 .insight-label { display: flex; align-items: center; gap: 7px; color: var(--lime); font-size: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
 .insight-module h4 { margin: 19px 0 8px; font-family: var(--display); font-size: 17px; font-weight: 500; }
 .insight-module > p { margin: 0; color: #b2b5aa; font-size: 10px; line-height: 1.7; }
+.suggested-action { width: 100%; margin-top: 16px; padding: 11px 0 0; border-top: 1px solid rgba(247, 246, 240, 0.12); }
+.suggested-action > span { color: var(--lime); font-size: 8px; letter-spacing: 0.04em; text-transform: uppercase; }
+.suggested-action > p { margin: 5px 0 0; color: #d1d2c9; font-size: 9px; line-height: 1.6; }
 .insight-source { display: flex; align-items: center; gap: 6px; margin-top: 15px; color: #93968c; font-size: 8px; }
 .insight-source svg { color: var(--coral); }
 .insight-link { display: inline-flex; align-items: center; gap: 7px; margin-top: auto; padding-top: 16px; color: var(--lime); font-size: 9px; text-decoration: none; }
@@ -611,6 +618,8 @@
 .signal-stream li:last-child .stream-indicator { color: var(--coral); }
 .stream-text { color: #d1d2c9; font-size: 9px; }
 .stream-tag { color: #93968c; font-size: 7px; letter-spacing: 0.05em; }
+.sample-disclaimer { margin: 13px 0 0; color: #a6a99e; font-size: 9px; line-height: 1.5; }
+.showcase-live-summary { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 .perspective {
   min-height: 565px;
   display: grid;
@@ -883,6 +892,9 @@
   .command-body { padding: 25px 14px 16px; }
   .command-title-row { display: block; }
   .command-title-row h3 { font-size: 22px; }
+  .scenario-picker { min-width: 0; max-width: 300px; margin-top: 15px; }
+  .scenario-picker label { font-size: 10px; }
+  .scenario-picker select { min-height: 39px; font-size: 12px; }
   .command-breadcrumb { font-size: 10px; line-height: 1.5; }
   .showcase-tabs { gap: 19px; margin-top: 18px; }
   .showcase-tab { min-height: 41px; font-size: 11px; }
@@ -905,6 +917,8 @@
   .insight-module h4 { margin-top: 11px; font-size: 15px; }
   .insight-label { font-size: 10px; }
   .insight-module > p { max-width: 430px; font-size: 11px; }
+  .suggested-action > span { font-size: 10px; }
+  .suggested-action > p { font-size: 11px; }
   .insight-source { font-size: 10px; }
   .insight-link { padding-top: 12px; font-size: 10px; }
   .stream-heading { padding-inline: 10px; }
@@ -912,6 +926,7 @@
   .stream-heading > div > span { display: block; margin-top: 2px; font-size: 10px; }
   .stream-heading h4 { font-size: 11px; }
   .stream-count { font-size: 10px; }
+  .sample-disclaimer { font-size: 10px; }
   .signal-stream li { grid-template-columns: 17px minmax(0, 1fr) auto; gap: 6px; padding-inline: 9px; }
   .stream-text { font-size: 10px; line-height: 1.35; }
   .stream-tag { font-size: 9px; }

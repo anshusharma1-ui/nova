@@ -17,6 +17,7 @@ import heroSmall from './assets/nova-hero-640.webp'
 import heroLarge from './assets/nova-hero-1280.webp'
 import horizonSmall from './assets/nova-horizon-480.webp'
 import horizonLarge from './assets/nova-horizon-960.webp'
+import { deriveIntelligenceViews, intelligenceDemoScenarios, type DerivedView, type IntelligenceViewId } from './intelligenceDemo'
 import './App.css'
 
 const navigation = [
@@ -259,78 +260,13 @@ function Platform() {
   )
 }
 
-const intelligenceViews = [
-  {
-    id: 'signals',
-    label: 'Signals',
-    title: 'Emerging signals',
-    subtitle: 'Early movement across your market',
-    period: 'Last 30 days',
-    range: '30D',
-    metrics: [
-      { label: 'Signal coverage', value: '84%', change: '+8 pts', positive: true },
-      { label: 'New patterns', value: '12', change: '+3 this week', positive: true },
-      { label: 'Lead time', value: '18 days', change: '+4 days', positive: true },
-    ],
-    series: [34, 39, 36, 45, 43, 51, 49, 57, 54, 68, 65, 73],
-    comparison: [31, 33, 37, 35, 40, 42, 41, 45, 46, 48, 51, 53],
-    insight: 'A new preference for flexible contracts is appearing in three adjacent categories.',
-    source: 'Customer language · example sources',
-    updates: [
-      { text: 'Flexible terms gain traction', tag: 'CUSTOMER', direction: 'up' },
-      { text: 'Hiring plans point to a new segment', tag: 'TALENT', direction: 'up' },
-      { text: 'Search interest shifts toward bundles', tag: 'DEMAND', direction: 'down' },
-    ],
-  },
-  {
-    id: 'market',
-    label: 'Market',
-    title: 'Market movement',
-    subtitle: 'Where demand and share are moving',
-    period: 'Last 90 days',
-    range: '90D',
-    metrics: [
-      { label: 'Demand index', value: '126.4', change: '+12.6%', positive: true },
-      { label: 'Share shift', value: '+2.8 pts', change: '+0.6 pts', positive: true },
-      { label: 'Price pressure', value: 'Low', change: '−1.2 pts', positive: true },
-    ],
-    series: [38, 36, 43, 41, 49, 47, 54, 52, 63, 61, 70, 78],
-    comparison: [35, 38, 36, 40, 39, 44, 45, 47, 49, 48, 53, 55],
-    insight: 'Demand is concentrating in mid-market accounts as competitors pull back on service.',
-    source: 'Category index · illustrative sample',
-    updates: [
-      { text: 'Mid-market demand clears baseline', tag: 'DEMAND', direction: 'up' },
-      { text: 'Two peers reduce service coverage', tag: 'COMPETITORS', direction: 'down' },
-      { text: 'Share gains hold across the quarter', tag: 'POSITION', direction: 'up' },
-    ],
-  },
-  {
-    id: 'momentum',
-    label: 'Momentum',
-    title: 'Execution momentum',
-    subtitle: 'Signals translated into forward motion',
-    period: 'This quarter',
-    range: 'QTR',
-    metrics: [
-      { label: 'Decisions on track', value: '91%', change: '+6 pts', positive: true },
-      { label: 'Initiative velocity', value: '+14%', change: '+5% vs. plan', positive: true },
-      { label: 'Time to action', value: '2.4 days', change: '−0.8 days', positive: true },
-    ],
-    series: [29, 34, 33, 42, 39, 48, 52, 50, 61, 64, 71, 82],
-    comparison: [33, 34, 36, 36, 39, 41, 42, 43, 46, 47, 49, 51],
-    insight: 'Teams acting on customer signals are moving 1.7× faster from readout to decision.',
-    source: 'Illustrative portfolio · sample initiatives',
-    updates: [
-      { text: 'Retention pilot moves into rollout', tag: 'INITIATIVE', direction: 'up' },
-      { text: 'Pricing decision cleared review', tag: 'DECISION', direction: 'up' },
-      { text: 'Regional launch needs an owner', tag: 'ATTENTION', direction: 'down' },
-    ],
-  },
-] as const
-
-function TrendChart({ view }: { view: (typeof intelligenceViews)[number] }) {
+function TrendChart({ view }: { view: DerivedView }) {
+  const chartValues = [...view.series, ...view.comparison]
+  const chartMinimum = Math.min(...chartValues)
+  const chartSpan = Math.max(...chartValues) - chartMinimum || 1
   const toPoints = (values: readonly number[]) =>
-    values.map((value, index) => `${(index / (values.length - 1)) * 1000},${220 - value * 2.1}`).join(' ')
+    values.map((value, index) => `${(index / (values.length - 1)) * 1000},${220 - ((value - chartMinimum) / chartSpan) * 180}`).join(' ')
+  const endpointY = 220 - ((view.series[view.series.length - 1] - chartMinimum) / chartSpan) * 180
 
   return (
     <div className="trend-chart">
@@ -342,13 +278,13 @@ function TrendChart({ view }: { view: (typeof intelligenceViews)[number] }) {
         className="trend-svg"
         viewBox="0 0 1000 250"
         role="img"
-        aria-label={`${view.label} trend rises from ${view.series[0]} to ${view.series[view.series.length - 1]} over the displayed period`}
+        aria-label={`Illustrative ${view.label.toLowerCase()} trend from ${view.series[0]} to ${view.series[view.series.length - 1]} across four periods`}
         preserveAspectRatio="none"
       >
         {[35, 85, 135, 185, 235].map((y) => <line key={y} x1="0" y1={y} x2="1000" y2={y} className="chart-gridline" />)}
         <polyline points={toPoints(view.comparison)} className="chart-comparison" />
         <polyline points={toPoints(view.series)} className="chart-current" />
-        <circle cx="1000" cy={220 - view.series[view.series.length - 1] * 2.1} r="7" className="chart-endpoint" />
+        <circle cx="1000" cy={endpointY} r="7" className="chart-endpoint" />
       </svg>
       <div className="chart-axis" aria-hidden="true"><span>WEEK 01</span><span>WEEK 02</span><span>WEEK 03</span><span>WEEK 04</span></div>
     </div>
@@ -356,20 +292,24 @@ function TrendChart({ view }: { view: (typeof intelligenceViews)[number] }) {
 }
 
 function Showcase() {
-  const [activeView, setActiveView] = useState(0)
-  const view = intelligenceViews[activeView]
+  const [activeView, setActiveView] = useState<IntelligenceViewId>('signals')
+  const [selectedScenarioId, setSelectedScenarioId] = useState(intelligenceDemoScenarios[0].id)
+  const scenario = intelligenceDemoScenarios.find((item) => item.id === selectedScenarioId) ?? intelligenceDemoScenarios[0]
+  const views = deriveIntelligenceViews(scenario)
+  const activeViewIndex = views.findIndex((item) => item.id === activeView)
+  const view = views[activeViewIndex]
 
   function handleTabKeyDown(event: React.KeyboardEvent<HTMLButtonElement>) {
-    let nextIndex = activeView
-    if (event.key === 'ArrowRight') nextIndex = (activeView + 1) % intelligenceViews.length
-    else if (event.key === 'ArrowLeft') nextIndex = (activeView - 1 + intelligenceViews.length) % intelligenceViews.length
+    let nextIndex = activeViewIndex
+    if (event.key === 'ArrowRight') nextIndex = (activeViewIndex + 1) % views.length
+    else if (event.key === 'ArrowLeft') nextIndex = (activeViewIndex - 1 + views.length) % views.length
     else if (event.key === 'Home') nextIndex = 0
-    else if (event.key === 'End') nextIndex = intelligenceViews.length - 1
+    else if (event.key === 'End') nextIndex = views.length - 1
     else return
 
     event.preventDefault()
-    setActiveView(nextIndex)
-    document.getElementById(`showcase-tab-${intelligenceViews[nextIndex].id}`)?.focus()
+    setActiveView(views[nextIndex].id)
+    document.getElementById(`showcase-tab-${views[nextIndex].id}`)?.focus()
   }
 
   return (
@@ -377,7 +317,7 @@ function Showcase() {
       <div className="section-kicker"><span>03</span><span>Inside the intelligence</span></div>
       <div className="showcase-heading">
         <h2 id="showcase-title">See what’s <em>taking shape.</em></h2>
-          <p>An illustrative preview of market and customer signals.</p>
+        <p>An illustrative preview of market and customer signals.</p>
       </div>
       <div className="command-center">
         <header className="command-topbar">
@@ -391,19 +331,29 @@ function Showcase() {
               <p className="command-breadcrumb">OVERVIEW <span>/</span> STRATEGIC INTELLIGENCE</p>
               <h3>Market &amp; customer signals<span>.</span></h3>
             </div>
+            <div className="scenario-picker">
+              <label htmlFor="showcase-scenario">ILLUSTRATIVE SCENARIO</label>
+              <select
+                id="showcase-scenario"
+                value={scenario.id}
+                onChange={(event) => setSelectedScenarioId(event.currentTarget.value)}
+              >
+                {intelligenceDemoScenarios.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
+              </select>
+            </div>
           </div>
           <div className="showcase-tabs" role="tablist" aria-label="Intelligence views">
-            {intelligenceViews.map((item, index) => (
+            {views.map((item, index) => (
               <button
                 key={item.id}
                 id={`showcase-tab-${item.id}`}
-                className={`showcase-tab${activeView === index ? ' is-active' : ''}`}
+                className={`showcase-tab${activeViewIndex === index ? ' is-active' : ''}`}
                 type="button"
                 role="tab"
-                aria-selected={activeView === index}
+                aria-selected={activeViewIndex === index}
                 aria-controls="showcase-panel"
-                tabIndex={activeView === index ? 0 : -1}
-                onClick={() => setActiveView(index)}
+                tabIndex={activeViewIndex === index ? 0 : -1}
+                onClick={() => setActiveView(item.id)}
                 onKeyDown={handleTabKeyDown}
               >
                 {item.label}
@@ -432,12 +382,16 @@ function Showcase() {
                 <div className="insight-label"><Sparkles size={14} aria-hidden="true" /><span>Worth a closer look</span></div>
                 <h4 id="insight-title">A pattern is forming.</h4>
                 <p>{view.insight}</p>
+                <div className="suggested-action">
+                  <span>Suggested action · illustrative</span>
+                  <p>{view.action}</p>
+                </div>
                 <div className="insight-source"><Activity size={13} aria-hidden="true" />{view.source}</div>
                 <a className="insight-link" href="#contact">Explore the signal <ArrowUpRight size={14} aria-hidden="true" /></a>
               </aside>
             </div>
             <section className="signal-stream" aria-labelledby="stream-title">
-              <div className="stream-heading"><div><h4 id="stream-title">Signal examples</h4><span>Illustrative shifts with a point of view</span></div><span className="stream-count">03 EXAMPLES</span></div>
+              <div className="stream-heading"><div><h4 id="stream-title">Illustrative examples</h4><span>Sample shifts calculated from this scenario</span></div><span className="stream-count">{String(view.updates.length).padStart(2, '0')} EXAMPLES</span></div>
               <ul>
                 {view.updates.map((update) => (
                   <li key={update.text}>
@@ -449,6 +403,10 @@ function Showcase() {
               </ul>
             </section>
           </div>
+          <p className="sample-disclaimer">All figures, patterns, and suggested actions are illustrative sample calculations, not live data or real-world results.</p>
+          <p className="showcase-live-summary" aria-live="polite" aria-atomic="true">
+            Showing illustrative {scenario.name} scenario, {view.label} view. {view.insight} Suggested action: {view.action}
+          </p>
         </div>
       </div>
     </section>
