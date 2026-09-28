@@ -1,6 +1,7 @@
 import { useRef, useState, type ChangeEvent, type DragEvent } from 'react'
 import { FileSpreadsheet, Trash2, Upload } from 'lucide-react'
 import { analyzeCsvText, CsvAnalysisError, type CsvAnalysis, type CsvDataType } from './csvAnalysisEngine'
+import { generateNovaInsight } from './novaInsight'
 
 const MAX_CSV_FILE_SIZE = 5 * 1024 * 1024
 const numberFormatter = new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 })
@@ -32,6 +33,7 @@ function CsvAnalyzer() {
   const [isDragging, setIsDragging] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const analysisRunRef = useRef(0)
+  const novaInsight = analysis ? generateNovaInsight(analysis) : null
 
   async function analyzeFile(file: File | undefined) {
     if (!file) return
@@ -157,6 +159,44 @@ function CsvAnalyzer() {
             </div>
             <span>{analysis.rowCount} rows · {analysis.columns.length} columns</span>
           </div>
+
+          {novaInsight && (
+            <section className={`nova-insight-panel${novaInsight.hasStrongPattern ? '' : ' is-cautious'}`} aria-labelledby="nova-insight-title">
+              <div className="nova-insight-topline">
+                <span>NOVA INSIGHT</span>
+                <span>DETERMINISTIC · UPLOADED DATA</span>
+              </div>
+              <h4 id="nova-insight-title">{novaInsight.headline}</h4>
+              <div className="nova-insight-content">
+                <div className="nova-insight-why">
+                  <h5>Why it matters</h5>
+                  <p>{novaInsight.explanation}</p>
+                </div>
+                <div className="nova-insight-evidence">
+                  <h5>Evidence</h5>
+                  <dl>
+                    {novaInsight.evidence.map((item) => (
+                      <div key={`${item.label}-${item.value}`}>
+                        <dt>{item.label}</dt>
+                        <dd>{item.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              </div>
+              <div className="nova-insight-footer">
+                <div>
+                  <h5>Suggested Investigation</h5>
+                  <p>{novaInsight.investigation}</p>
+                </div>
+                <p className="nova-insight-quality">{novaInsight.dataQualityNote}</p>
+              </div>
+              <details className="nova-insight-trace">
+                <summary>How NOVA reached this insight</summary>
+                <p>{novaInsight.traceability}</p>
+              </details>
+            </section>
+          )}
 
           <div className="csv-results-grid">
             <section className="csv-result-section" aria-labelledby="csv-pattern-title">

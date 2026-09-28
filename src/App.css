@@ -716,6 +716,37 @@
 .csv-results-heading > div > p { margin: 0 0 6px; color: #68704f; font-size: 10px; font-weight: 700; letter-spacing: 0.07em; }
 .csv-results-heading h3 { margin: 0; font-family: var(--display); font-size: 25px; font-weight: 500; }
 .csv-results-heading > span { color: var(--muted); font-size: 12px; white-space: nowrap; }
+
+.nova-insight-panel {
+  margin-bottom: 18px;
+  padding: 22px 24px 18px;
+  color: var(--ink);
+  background: var(--paper-light);
+  border: 1px solid rgba(23, 26, 21, 0.16);
+  border-left: 4px solid #737b5f;
+}
+
+.nova-insight-panel.is-cautious { border-left-color: #a98a50; }
+.nova-insight-topline { display: flex; align-items: center; justify-content: space-between; gap: 14px; color: #68704f; font-size: 10px; font-weight: 700; letter-spacing: 0.07em; }
+.nova-insight-topline span:last-child { color: var(--muted); font-size: 9px; font-weight: 600; text-align: right; }
+.nova-insight-panel > h4 { max-width: 900px; margin: 13px 0 18px; font-family: var(--display); font-size: 26px; font-weight: 500; line-height: 1.25; }
+.nova-insight-content { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 24px; }
+.nova-insight-why h5,
+.nova-insight-evidence h5,
+.nova-insight-footer h5 { margin: 0 0 8px; color: #68704f; font-size: 11px; font-weight: 700; text-transform: uppercase; }
+.nova-insight-why p,
+.nova-insight-footer > div > p { margin: 0; color: #4e5049; font-size: 13px; line-height: 1.65; }
+.nova-insight-evidence dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0; }
+.nova-insight-evidence dl > div { min-width: 0; padding: 10px 12px; background: #eeede6; border: 1px solid rgba(23, 26, 21, 0.1); }
+.nova-insight-evidence dt { color: var(--muted); font-size: 10px; line-height: 1.4; }
+.nova-insight-evidence dd { overflow-wrap: anywhere; margin: 4px 0 0; color: var(--ink); font-family: var(--display); font-size: 15px; font-weight: 500; line-height: 1.3; }
+.nova-insight-footer { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(180px, 0.8fr); gap: 22px; margin-top: 17px; padding-top: 14px; border-top: 1px solid rgba(23, 26, 21, 0.14); }
+.nova-insight-quality { align-self: end; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+.nova-insight-trace { margin-top: 14px; padding-top: 11px; border-top: 1px solid rgba(23, 26, 21, 0.1); }
+.nova-insight-trace summary { width: fit-content; color: #55603b; cursor: pointer; font-size: 12px; font-weight: 600; }
+.nova-insight-trace summary:focus-visible { outline: 2px solid var(--coral-text); outline-offset: 3px; }
+.nova-insight-trace > p { max-width: 920px; margin: 9px 0 0; color: #565850; font-size: 12px; line-height: 1.6; }
+
 .csv-results-grid { display: grid; grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr); gap: 17px; align-items: start; }
 .csv-result-section { min-width: 0; padding: 19px; border: 1px solid var(--line); background: rgba(247, 246, 240, 0.45); }
 .csv-result-section > h4,
@@ -1033,6 +1064,11 @@
   .csv-results { margin-top: 25px; }
   .csv-results-heading { align-items: flex-start; flex-direction: column; gap: 6px; }
   .csv-results-heading h3 { font-size: 22px; }
+  .nova-insight-panel { padding: 17px 16px 15px; }
+  .nova-insight-panel > h4 { margin: 11px 0 14px; font-size: 22px; }
+  .nova-insight-content,
+  .nova-insight-footer { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .nova-insight-quality { align-self: auto; }
   .csv-result-section { padding: 14px; }
   .csv-analysis-disclaimer { font-size: 10px; }
   .showcase-heading { display: block; margin: 27px 0 29px; }
@@ -1131,6 +1167,11 @@
   .csv-dropzone-copy { gap: 10px; }
   .csv-file-meta { padding: 10px; }
   .csv-results-heading > span { white-space: normal; }
+  .nova-insight-panel { padding: 14px 12px; }
+  .nova-insight-topline { align-items: flex-start; font-size: 9px; }
+  .nova-insight-topline span:last-child { font-size: 8px; }
+  .nova-insight-panel > h4 { font-size: 20px; }
+  .nova-insight-evidence dl { grid-template-columns: minmax(0, 1fr); }
   .csv-preview-heading { align-items: flex-start; flex-direction: column; gap: 0; }
   .csv-table th,
   .csv-table td { padding: 7px 8px; }
